@@ -14,13 +14,27 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.Selectable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ZJtrustPropessor implements PageProcessor {
+
+    private String value;
+
+    public ZJtrustPropessor() {
+        this.value = "https://www.zjtrust.com.cn/cn/page/115.html";
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     private Site site = Site.me().setSleepTime(1000).setRetryTimes(30).setCharset("utf-8").setTimeOut(300000)
             .setUserAgent(
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
@@ -29,7 +43,7 @@ public class ZJtrustPropessor implements PageProcessor {
     public void process(Page page) {
         Html html = page.getHtml();
         //1.获取列表页
-        if (page.getUrl().toString().contains("https://www.zjtrust.com.cn/cn/page/115.html")) {
+        if (page.getUrl().toString().contains(value)) {
             //Selectable selectable = html.$("table.t1/tbody");
             Document document = html.getDocument();
             Elements elements = document.select("table.t1 >tbody").select("a");
@@ -45,7 +59,7 @@ public class ZJtrustPropessor implements PageProcessor {
             String href = first.attr("href");
             String value = RegexUtil.getValue("\\((\\d+)\\)", href, 1);
             if (!StringUtils.isEmpty(value)) {
-                page.addTargetRequest("https://www.zjtrust.com.cn/cn/page/115.html?pageIndex=" + value);
+                page.addTargetRequest("value?pageIndex=" + value);
             }
         } else if (page.getUrl().toString().contains("https://www.zjtrust.com.cn/cn/page/")) {
             //详情页

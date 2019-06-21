@@ -2,32 +2,27 @@ package com.xinyan.trust.util;
 
 import com.baidu.aip.ocr.AipOcr;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 
 @Slf4j
 public class OCRUtil {
-    private static final String API_KEY2 = "iYmQITUw0RPhwTXMN3pheXDW";
-    private static final String SECRET_KEY2 = "DnteVSRZ7v54daYSxPal37qOfbhbhYtE";
-    private static final String APP_ID = "16577956";
-    private static final String API_KEY = "kB0TpOLGtsALluzhbAH8f0G1";
-    private static final String SECRET_KEY = "ZscGQRHp9BYF1t4x5Tjr3bmHbtVZUGkw";
+
     //16579906@iYmQITUw0RPhwTXMN3pheXDW@DnteVSRZ7v54daYSxPal37qOfbhbhYtE
     //16577956@kB0TpOLGtsALluzhbAH8f0G1@ZscGQRHp9BYF1t4x5Tjr3bmHbtVZUGkw
     //add("14584148@9kjTspzFehGYGRb4RK2iNTgr@iw0jSiBYeezUpYlP3cK9SLbxyxhzbWOI");
     //add("15764112@YKthQd4kY0nVgCzCheQAVWaZ@WpzBkpua7gsrdv7HICPmeYiM9rmq2Rpo");
     //add("15764153@27n4kOdKSgIvFz0WtrpX3T4O@yIS9M1bL9AtSva8iWq5BZv6sVvlECHdQ");
     private static List<AipOcr> ocrList = new ArrayList<>();
-    private static AipOcr aipOcr = null;
+    private static AipOcr aipOcr;
     static {
         add("14584148@9kjTspzFehGYGRb4RK2iNTgr@iw0jSiBYeezUpYlP3cK9SLbxyxhzbWOI");
         add("15764112@YKthQd4kY0nVgCzCheQAVWaZ@WpzBkpua7gsrdv7HICPmeYiM9rmq2Rpo");
@@ -77,6 +72,11 @@ public class OCRUtil {
         return null;
     }
 
+    /**
+     * 普通ocr
+     * @param url
+     * @return
+     */
     public static String getBasicText(String url){
         try {
             HashMap<String, String> options = new HashMap<>();
