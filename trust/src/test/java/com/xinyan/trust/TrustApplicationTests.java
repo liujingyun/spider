@@ -11,6 +11,7 @@ public class TrustApplicationTests {
 
     @Test
     public void contextLoads() {
+
     }
 
 }

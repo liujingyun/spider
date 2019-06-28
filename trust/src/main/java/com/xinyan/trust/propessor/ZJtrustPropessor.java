@@ -23,6 +23,16 @@ public class ZJtrustPropessor implements PageProcessor {
 
     private String value;
 
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public ZJtrustPropessor() {
         this.value = "https://www.zjtrust.com.cn/cn/page/115.html";
     }
@@ -57,9 +67,9 @@ public class ZJtrustPropessor implements PageProcessor {
             //下一页
             Element first = document.select("ul>li.next").first().select("a").first();
             String href = first.attr("href");
-            String value = RegexUtil.getValue("\\((\\d+)\\)", href, 1);
-            if (!StringUtils.isEmpty(value)) {
-                page.addTargetRequest("value?pageIndex=" + value);
+            String number = RegexUtil.getValue("\\((\\d+)\\)", href, 1);
+            if (!StringUtils.isEmpty(number)) {
+                page.addTargetRequest(this.value+"?pageIndex=" + number);
             }
         } else if (page.getUrl().toString().contains("https://www.zjtrust.com.cn/cn/page/")) {
             //详情页
@@ -69,12 +79,6 @@ public class ZJtrustPropessor implements PageProcessor {
             List<String> imageUrl = new ArrayList<>();
             Element first = document.select("div.contenBox>div>div>div").first();
             Elements select = first.select("p>img");
-//            Element img = first.select("p").first();
-//            String height = "";
-//            if(img != null) {
-//                height = img.attr("style");
-//            }
-            //String div = first.text(); !height.equals("133") 162
             if (select!=null && select.size()>1) {
                 for (Element element : first.select("p")) {
                     String src = element.select("img").attr("src");
@@ -104,10 +108,8 @@ public class ZJtrustPropessor implements PageProcessor {
         long l = System.currentTimeMillis();
         SavePipeline savePipeline = new SavePipeline();
         //https://www.zjtrust.com.cn/cn/page/115.html https://www.zjtrust.com.cn/cn/page/115.html?pageIndex=7
-        Spider thread = Spider.create(new ZJtrustPropessor()).addUrl("https://www.zjtrust.com.cn/cn/page/37/1047.html").addPipeline(savePipeline).thread(1);
-        //D://test.xls
+        Spider thread = Spider.create(new ZJtrustPropessor()).addUrl("https://www.zjtrust.com.cn/cn/page/115.html").addPipeline(savePipeline).thread(1);
         thread.run();
-        savePipeline.downloadExcel("D://test.xls");
         System.out.println("over......." + (System.currentTimeMillis() - l) / 1000);
         //已清算 https://www.zjtrust.com.cn/cn/page/116.html
 

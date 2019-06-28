@@ -1,6 +1,10 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://dba:dba@localhost:27017/zijin
+      uri: mongodb://dba:dba@localhost:27017/company
+  redis:
+    database: 1
+    host: 127.0.0.1
+    port: 6379
 server:
   port: 8089

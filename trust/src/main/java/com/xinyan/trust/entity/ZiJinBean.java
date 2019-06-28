@@ -5,9 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-public class ZiJinBean {
+public class ZiJinBean extends BaseBean{
     private String url;
     private String title;
     private String imageData;
-    private String date;
 }
