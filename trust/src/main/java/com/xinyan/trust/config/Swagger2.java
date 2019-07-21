@@ -24,12 +24,13 @@ public class Swagger2 {
      */
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        Docket build = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.xinyan.trust.controller"))
                 .paths(PathSelectors.any())
                 .build();
+        return build;
     }
     /**
      * 创建该API的基本信息（这些基本信息会展现在文档页面中）

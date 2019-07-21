@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.List;
 
 public class ExcelUtil {
@@ -33,7 +34,7 @@ public class ExcelUtil {
         Cell cell = row.createCell(1);
         cell.setCellValue("创建时间：");
         Cell cell2 = row.createCell(2);
-        cell2.setCellValue(excelBean.getUpdateTime());
+        cell2.setCellValue(new Date());
 
     }
     /**

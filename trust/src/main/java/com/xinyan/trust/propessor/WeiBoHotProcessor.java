@@ -1,6 +1,10 @@
 package com.xinyan.trust.propessor;
 
+import com.xinyan.trust.entity.WeiBo;
+import com.xinyan.trust.entity.WeiBoHotAll;
 import com.xinyan.trust.pipeline.SavePipeline;
+import com.xinyan.trust.repository.WeiBoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -9,6 +13,8 @@ import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 import us.codecraft.webmagic.selector.Selectable;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -19,17 +25,30 @@ public class WeiBoHotProcessor implements PageProcessor {
     private Site site = Site.me().setSleepTime(1000).setRetryTimes(30).setCharset("utf-8").setTimeOut(300000)
             .setUserAgent(
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
-
+    @Autowired
+    private WeiBoRepository weiBoRepository;
     @Override
     public void process(Page page) {
         // 根据URL判断页面类型
         Html html = page.getHtml();
         List<Selectable> nodes =
                 html.xpath("//div[@id=pl_top_realtimehot]/table/tbody/tr").nodes();
+        WeiBoHotAll weiBoHotAll = new WeiBoHotAll();
+        List<WeiBo> weiBos = new ArrayList<>();
         for (Selectable node : nodes){
-            node.xpath("//td[@class=td-02]/a/text()");
-            node.xpath("//td[@class=td-02]/a/text()");
+            WeiBo weiBo = new WeiBo();
+            String key = node.xpath("//td[@class=td-02]/a/text()").get();
+            weiBo.setKey(key);
+            String uri =  node.xpath("//td[@class=td-02]/a").links().get();
+            weiBo.setUri(uri);
+            String hotNum = node.xpath("//td[@class=td-02]/span/text()").get();
+            weiBo.setHots(hotNum);
+            String flag = node.xpath("//td[@class=td-03]/a/text()").get();
+            weiBo.setFlag(flag);
+            weiBos.add(weiBo);
         }
+        weiBoHotAll.setCreateTime(new Date());
+        weiBoRepository.save(weiBoHotAll);
     }
 
     @Override
@@ -38,6 +57,6 @@ public class WeiBoHotProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        //Spider.create(new WeiBoHotProcessor()).addUrl("https://s.weibo.com/top/summary?Refer=top_hot&topnav=1&wvr=6").addPipeline(new SavePipeline()).thread(5).run();
+        Spider.create(new WeiBoHotProcessor()).addUrl("https://s.weibo.com/top/summary?cate=realtimehot").thread(1).run();
     }
 }

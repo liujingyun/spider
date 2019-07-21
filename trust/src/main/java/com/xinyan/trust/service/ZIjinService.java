@@ -88,7 +88,7 @@ public class ZIjinService {
                 String flieName = "紫金信托" + System.currentTimeMillis();
                 response.reset();// 清空输出流
                 // 设定输出文件头
-                response.setHeader("Content-disposition", "attachment; filename=" + new String(flieName.getBytes("UTF-8"), "ISO8859-1") + ".xls");
+                response.setHeader("Content-disposition", "attachment; filename=" + flieName + ".xls");
                 // 定义输出类型
                 response.setContentType("application/msexcel;charset=utf-8");
                 HSSFWorkbook wb = new HSSFWorkbook();
