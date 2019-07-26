@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller("/zijin")
-@Api(value = "ZiJinController|一个用来测试爬虫")
+@Api(value = "ZiJinController|一个用来测试的爬虫")
 public class ZiJinController {
     @Autowired
     private ZIjinService zijinService;

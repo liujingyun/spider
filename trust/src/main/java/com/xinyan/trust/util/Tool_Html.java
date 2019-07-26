@@ -3,9 +3,13 @@ package com.xinyan.trust.util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -366,5 +370,32 @@ public class Tool_Html {
             log.debug("#方法不能识别该参数:".concat(args_string));
             return null;
         }
+    }
+    // /////////////////////////////映射 html 页面/////////////////////////////////////
+
+    /**
+     * 映射本地的 html 文件为 document
+     */
+    public Document html_bypath(String path_html, String encoding) throws IOException {
+        File input = new File(path_html);
+        return Jsoup.parse(input, encoding);
+    }
+
+    public Document html(String source) {
+        source = source == null ? "" : source;
+        return Jsoup.parse(source);
+    }
+
+    /**
+     * 获取 表头中 文字所在列（如果不存在 将返回 999 存在返回 所在列的index 从0开始）
+     */
+    public int get_table_column_index(String searchName, Elements elements) {
+        int index = 999;
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).text().contains(searchName.trim())) {
+                return i;
+            }
+        }
+        return index;
     }
 }

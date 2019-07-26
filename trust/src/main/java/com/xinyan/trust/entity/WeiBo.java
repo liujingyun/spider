@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class WeiBo {
     private String key;
     private String flag;
-    private String hots;
+    private Long hotNum;
     private String uri;
+    private Integer rank;
 }

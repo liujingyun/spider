@@ -1,8 +1,10 @@
 package com.xinyan.trust.task;
 
 import com.xinyan.trust.propessor.WeiBoHotProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
 
 /**
@@ -12,14 +14,16 @@ import us.codecraft.webmagic.Spider;
  * @Date 2019/7/1 17:55
  * @Version V1.0
  **/
-@Component
+@Configuration
+@EnableScheduling
 public class WeiBoTask {
-
+    @Autowired
     private WeiBoHotProcessor processor;
-    @Scheduled(cron = "* 0/5 * * * ?")
+
+    @Scheduled(fixedRate = 1000*60*1)
     public void getWeiBoHot(){
-        Spider.create(processor)
-                .addUrl("https://www.zjtrust.com.cn/cn/page/115.html")
-                .thread(3).run();
+        System.out.println("微博热点自动化爬取。。。");
+        Spider.create(processor).addUrl("https://s.weibo.com/top/summary?cate=realtimehot").thread(1).start();
+
     }
 }

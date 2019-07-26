@@ -20,6 +20,6 @@ import java.util.List;
 public class WeiBoHotAll {
     @Id
     private ObjectId id;
-    List<WeiBo> weiBoList;
+    private List<WeiBo> weiBoList;
     private Date createTime;
 }
