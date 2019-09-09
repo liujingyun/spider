@@ -54,27 +54,4 @@ public class Test {
 
         System.out.println(map);
     }
-
-    public static JsonObject getDataTemple(Class aClass) throws ClassNotFoundException {
-        JsonObject jsonObject = new JsonObject();
-        Field[] fields = aClass.getDeclaredFields();
-        for (Field field1 : fields) {
-            Type type = field1.getGenericType();
-            if (type.equals(ObjectId.class) || type.equals(String.class) || type.equals(Integer.class) || type.equals(BigDecimal.class)) {
-                String value = field1.getAnnotation(FieldMeaning.class).value();
-                jsonObject.addProperty(field1.getName(), value);
-            } else {
-                if(type instanceof ParameterizedType){
-                    ParameterizedType listGenericType = (ParameterizedType) type;
-                    Type[] listActualTypeArguments = listGenericType.getActualTypeArguments();
-                    for(Type type1 : listActualTypeArguments){
-                        jsonObject.add(field1.getName(), getDataTemple(Class.forName(type1.getTypeName())));
-                    }
-                } else {
-                    jsonObject.add(field1.getName(), getDataTemple(Class.forName(type.getTypeName())));
-                }
-            }
-        }
-        return jsonObject;
-    }
 }

@@ -4,7 +4,6 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 /**
@@ -31,6 +30,6 @@ public class CrmProcessor implements PageProcessor {
     }
 
     public static void main(String[] args) {
-        Spider.create(new TestProcessor()).addUrl("http://prd-crm.wejoydata.com/login").thread(1).run();
+
     }
 }

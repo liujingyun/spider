@@ -41,4 +41,9 @@ public class ZiJinController {
     public String downLoadExcel(String token, HttpServletResponse response){
         return this.zijinService.download(token,response);
     }
+
+    @GetMapping("getTest")
+    public String getTest(@RequestParam(value = "token") String token){
+        return Status.getValue(token);
+    }
 }

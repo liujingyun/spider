@@ -1,11 +1,15 @@
 package com.xinyan.trust.stream;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 /**
  * @ClassName TestStream
@@ -73,7 +77,11 @@ public class TestStream {
     @Test
     public void testSorded() {
         //自然排序
-        Arrays.asList("3", "2", "a").stream().sorted().forEach(System.out::println);
+        List<String> a = new ArrayList<>();
+        Arrays.asList("3", "2", "1").stream().sorted().forEach(x->{
+            a.add(x);
+        });
+
         System.out.println("-----------------");
         //定制排序 将0默认放在最后 其他升序排序
         Arrays.asList(3, 0, 1, 2).stream().sorted((x, y) -> {
@@ -145,5 +153,14 @@ public class TestStream {
             }
         });
         System.out.println(integers);
+    }
+
+    @Test
+    public void test1(){
+//        List<Integer> list =  new ArrayList<>(Arrays.asList(null, 1, 2, null, 3, null));
+//
+//        list.removeIf(Objects::isNull);
+//
+//        assertThat(list, hasSize(3));
     }
 }
