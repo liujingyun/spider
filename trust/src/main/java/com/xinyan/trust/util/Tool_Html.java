@@ -26,7 +26,7 @@ public class Tool_Html {
     private String crawl_token = "";
 
     private static String ARGS_SEPARATOR = " ";
-    private CommandLineParser parser = new GnuParser();
+    private CommandLineParser parser = new DefaultParser();
     public final Options options = new Options();
 
     private static final Option option_select = new Option("select", "select", true, "根据 select 查找节点");

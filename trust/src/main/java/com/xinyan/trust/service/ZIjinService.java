@@ -11,7 +11,9 @@ import com.xinyan.trust.util.Status;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
 
@@ -29,7 +31,9 @@ public class ZIjinService {
     @Autowired
     private SavePipeline savePipeline;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ValueOperations<String, Object> valueOperations;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private ExcelRepository repository;
     private final Integer poolSize = 5;
@@ -46,7 +50,7 @@ public class ZIjinService {
 
     public void startSpider(String token) {
         try {
-            this.stringRedisTemplate.opsForValue().set(token, Status.START.getCode());
+            this.valueOperations.set(token, Status.START.getCode());
             ExcelBean excelBean = new ExcelBean();
             excelBean.setToken(token);
             List<ZiJinBean> ziJinBeans = new CopyOnWriteArrayList<>();
@@ -57,24 +61,25 @@ public class ZIjinService {
                         .addUrl("https://www.zjtrust.com.cn/cn/page/115.html")
                         .addPipeline(savePipeline).thread(3).run();
 
-                this.stringRedisTemplate.opsForValue().set(token, Status.END.getCode());
+                this.valueOperations.set(token, Status.END.getCode());
                 excelBean.setMessage(ziJinBeans);
                 System.out.println(excelBean);
                 this.repository.save(excelBean);
             });
 
         } catch (Exception e) {
-            this.stringRedisTemplate.opsForValue().set(token, Status.FAILED.getCode());
+            this.valueOperations.set(token, Status.FAILED.getCode());
         }
 
     }
 
     public String getStatus(String token) {
-        return this.stringRedisTemplate.opsForValue().get(token);
+        return (String) this.valueOperations.get(token);
     }
 
     /**
      * 下载
+     *
      * @param token
      * @param response
      * @return
@@ -94,7 +99,7 @@ public class ZIjinService {
                 HSSFWorkbook wb = new HSSFWorkbook();
 
                 HSSFSheet sheet = wb.createSheet("紫金信托");
-                ExcelUtil.setSheet(sheet,bean);
+                ExcelUtil.setSheet(sheet, bean);
                 output = response.getOutputStream();
                 wb.write(output);
                 output.flush();
@@ -103,8 +108,8 @@ public class ZIjinService {
         } catch (Exception e) {
             e.printStackTrace();
             return "任务未完成";
-        }finally {
-            if(output !=null){
+        } finally {
+            if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
